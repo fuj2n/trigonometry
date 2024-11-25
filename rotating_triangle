@@ -1,0 +1,70 @@
+import pygame
+import math
+
+# Initialize pygame
+pygame.init()
+
+# Window properties
+width_of_window = 1100
+height_of_window = 650
+running = True
+
+# Colors
+beyaz = (255, 255, 255)
+beyaz_seffaf = (255, 255, 255, 100)
+kirmizi = (255,0,0)
+mavi = (0,0,255)
+
+# Set up the screen
+ekran = pygame.display.set_mode((width_of_window, height_of_window))
+katman1 = pygame.Surface((width_of_window, height_of_window), pygame.SRCALPHA)
+pygame.display.set_caption("Trigonometri")
+
+# Draw the static parts (grid lines, main circle) onto katman1
+pygame.draw.circle(katman1, beyaz_seffaf, (550, 325), 250, 2)
+pygame.draw.line(katman1, beyaz, (50, 325), (1050, 325), 1)
+pygame.draw.line(katman1, beyaz, (550, 630), (550, 30), 1)
+pygame.draw.line(katman1, beyaz, (800, 320), (800, 330), 3)
+pygame.draw.line(katman1, beyaz, (300, 320), (300, 330), 3)
+pygame.draw.line(katman1, beyaz, (545, 575), (555, 575), 3)
+pygame.draw.line(katman1, beyaz, (545, 75), (555, 75), 3)
+
+# Initial angle
+aci = 0
+
+# Function to draw the trigonometric line
+def ciz(aci):
+    sin = math.sin(math.radians(aci))
+    cos = math.cos(math.radians(aci))
+    pygame.draw.line(ekran, beyaz, (550, 325), (550 + 250 * cos, 325 - 250 * sin), 1)
+
+#trigonometri
+def ciz_ücgen(aci):
+    sin = math.sin(math.radians(aci))
+    cos = math.cos(math.radians(aci))
+    pygame.draw.line(ekran,kirmizi,(550,325),(550+250*cos,325-250*sin),1)
+    pygame.draw.line(ekran,mavi,(550+250*cos,325-250*sin),(550+250*cos,325))
+
+
+# Main loop
+while running:
+    # Event handling
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    # Clear the screen and redraw the static layer
+    ekran.fill(0)
+    ekran.blit(katman1, (0, 0))
+
+    # Draw the current trigonometric line based on the angle
+    ciz(aci)
+    aci = (aci + 1) % 360  # Increment and wrap angle
+    ciz_ücgen(aci - 1)
+
+    # Update the display and control frame rate
+    pygame.display.flip()
+    pygame.time.delay(10)
+
+# Quit pygame
+pygame.quit()
