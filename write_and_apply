@@ -1,0 +1,80 @@
+import pygame
+import math
+import sys
+
+pygame.init()
+
+aci = 0
+giris = ""
+aktif = True
+
+width_of_window = 1100
+height_of_window = 650
+running = True
+
+beyaz = (255,255,255)
+beyaz_seffaf = (255,255,255,100)
+siyah = (0,0,0)
+kirmizi = (255,0,0)
+mavi = (0,0,255)
+degisken_renk = siyah if aktif else (155,155,155)
+FONT = pygame.font.Font(None, 26)
+
+clock = pygame.time.Clock() 
+ekran = pygame.display.set_mode((width_of_window,height_of_window))
+katman1 = pygame.Surface((width_of_window,height_of_window),pygame.SRCALPHA)
+pygame.display.set_caption("Trigonometri")
+
+pygame.draw.circle(katman1,beyaz_seffaf,(550,325),250,2)
+
+#trigonometri
+def ciz(aci):
+    sin = math.sin(math.radians(aci))
+    cos = math.cos(math.radians(aci))
+    pygame.draw.line(ekran,beyaz,(550,325),(550+250*cos,325-250*sin),1)
+
+def ciz_ücgen(aci):
+    sin = math.sin(math.radians(aci))
+    cos = math.cos(math.radians(aci))
+    pygame.draw.line(ekran,kirmizi,(550,325),(550+250*cos,325-250*sin),1)
+    pygame.draw.line(ekran,mavi,(550+250*cos,325-250*sin),(550+250*cos,325))
+
+
+
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+        elif event.type == pygame.KEYDOWN and aktif :
+            if event.key == pygame.K_RETURN:
+                try:
+                    aci = int(giris)
+                except ValueError:
+                    print("Lutfen sayi giriniz")
+                giris = ""
+
+            elif event.key == pygame.K_BACKSPACE:
+                giris = giris[:-1]
+
+            else:
+                if event.unicode.isdigit():
+                    giris += event.unicode
+    ekran.fill(siyah)
+    ekran.blit(katman1, (0, 0))
+    
+    pygame.draw.line(ekran,beyaz,(50,325),(1050,325),1)
+    pygame.draw.line(ekran,beyaz,(550,630),(550,30),1)
+
+    pygame.draw.line(ekran,beyaz,(800,320),(800,330),3)
+    pygame.draw.line(ekran,beyaz,(300,320),(300,330),3)
+    pygame.draw.line(ekran,beyaz,(545,575),(555,575),3)
+    pygame.draw.line(ekran,beyaz,(545,75),(555,75),3)
+    ciz(aci)
+    ciz_ücgen(aci)
+    clock.tick(60)
+
+    giris_yuzey = FONT.render(giris, True, beyaz)
+    pygame.draw.rect(ekran,beyaz,(970,30,75,30),1)                
+    ekran.blit(giris_yuzey, (975,35))
+    pygame.display.flip()
